@@ -632,9 +632,9 @@ Có thể phát triển thêm:
 ## 17. Thông tin tác giả
 
 ```text
-Sinh viên: Nguyễn Đức Minh
-MSSV: 231611153
-Email: ducminhgodz@gmail.com
+Sinh viên: NGUYEN PHI QUOC BAO
+MSSV: 
+Email: quocbaodeptrai@gmail.com
 ```
 
 ---
