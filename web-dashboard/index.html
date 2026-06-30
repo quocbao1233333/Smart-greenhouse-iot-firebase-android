@@ -1,1 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Greenhouse Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-content">
+        <img src="greenhouse.png" alt="Greenhouse logo" class="header-logo" />
+        <div>
+          <h1>Smart Greenhouse Dashboard</h1>
+          <p>Hệ thống giám sát và điều khiển nhà kính trồng cây thông minh</p>
+        </div>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <button class="area-btn active" data-area="hanoi">Hà Nội</button>
+      <button class="area-btn" data-area="gialai">Gia Lai</button>
+      <button class="area-btn" data-area="hochiminh">Hồ Chí Minh</button>
+      <button class="area-btn" data-area="camau">Cà Mau</button>
+    </aside>
+
+    <main class="main-dashboard">
+      <section class="status-panel">
+        <div>
+          <h2 id="areaTitle">Khu vực: Hà Nội</h2>
+          <p>Thời gian hiện tại: <span id="clock">--:--:--</span></p>
+        </div>
+        <div class="connection-status" id="connectionStatus">Đang kết nối RTDB...</div>
+      </section>
+
+      <section class="sensor-section">
+        <h3>Thông số cảm biến</h3>
+        <div class="sensor-grid">
+          <article class="sensor-card">
+            <img src="temperature.png" alt="Nhiệt độ" />
+            <div>
+              <p>Nhiệt độ</p>
+              <strong><span id="temperatureValue">0</span> °C</strong>
+            </div>
+          </article>
+
+          <article class="sensor-card">
+            <img src="humidity.png" alt="Độ ẩm không khí" />
+            <div>
+              <p>Độ ẩm không khí</p>
+              <strong><span id="humidityValue">0</span> %</strong>
+            </div>
+          </article>
+
+          <article class="sensor-card">
+            <img src="soil.png" alt="Độ ẩm đất" />
+            <div>
+              <p>Độ ẩm đất</p>
+              <strong><span id="soilMoistureValue">0</span> %</strong>
+            </div>
+          </article>
+
+          <article class="sensor-card">
+            <img src="sun.png" alt="Ánh sáng" />
+            <div>
+              <p>Ánh sáng</p>
+              <strong><span id="lightValue">0</span> lux</strong>
+            </div>
+          </article>
+
+          <article class="sensor-card">
+            <img src="co2.png" alt="CO2" />
+            <div>
+              <p>CO₂</p>
+              <strong><span id="co2Value">0</span> ppm</strong>
+            </div>
+          </article>
+
+          <article class="sensor-card">
+            <img src="waterlevel.png" alt="Mực nước" />
+            <div>
+              <p>Mực nước</p>
+              <strong><span id="waterLevelValue">0</span> %</strong>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="device-section">
+        <h3>Điều khiển thiết bị</h3>
+        <div class="device-grid">
+          <article class="device-card">
+            <img id="growLightIcon" src="light_off.png" alt="Đèn trồng cây" />
+            <h4>Đèn trồng cây</h4>
+            <p id="growLightStatus">OFF</p>
+            <div class="button-group">
+              <button class="on-btn" onclick="setDevice('growLight', 1)">ON</button>
+              <button class="off-btn" onclick="setDevice('growLight', 0)">OFF</button>
+            </div>
+          </article>
+
+          <article class="device-card">
+            <img id="fanIcon" src="fan_off.png" alt="Quạt thông gió" />
+            <h4>Quạt thông gió</h4>
+            <p id="fanStatus">OFF</p>
+            <div class="button-group">
+              <button class="on-btn" onclick="setDevice('fan', 1)">ON</button>
+              <button class="off-btn" onclick="setDevice('fan', 0)">OFF</button>
+            </div>
+          </article>
+
+          <article class="device-card">
+            <img id="waterPumpIcon" src="waterpump_off.png" alt="Máy bơm nước" />
+            <h4>Máy bơm nước</h4>
+            <p id="waterPumpStatus">OFF</p>
+            <div class="button-group">
+              <button class="on-btn" onclick="setDevice('waterPump', 1)">ON</button>
+              <button class="off-btn" onclick="setDevice('waterPump', 0)">OFF</button>
+            </div>
+          </article>
+
+          <article class="device-card">
+            <img id="heaterIcon" src="heating_off.png" alt="Máy sưởi" />
+            <h4>Máy sưởi</h4>
+            <p id="heaterStatus">OFF</p>
+            <div class="button-group">
+              <button class="on-btn" onclick="setDevice('heater', 1)">ON</button>
+              <button class="off-btn" onclick="setDevice('heater', 0)">OFF</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <aside class="chart-panel">
+      <h3>Biểu đồ cảm biến</h3>
+      <p id="chartAreaName">Hà Nội</p>
+      <div class="chart-box">
+        <canvas id="sensorBarChart"></canvas>
+      </div>
+    </aside>
+
+    <footer class="footer">
+      <p><strong>Thông tin sinh viên</strong></p>
+      <p>NGUYEN PHI QUOC BAO | MSSV: 23161100 | Mail: NGUYENPHIQUOCBAO@gmail.com</p>
+    </footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-database.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="function.js"></script>
+</body>
+</html>
+
 
